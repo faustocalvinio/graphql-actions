@@ -35,4 +35,15 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         echo "new version: $NEW_VERSION !"
   
-  
+    - name: Build docker image
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version}}
+      run: |
+        docker build -t faustocalvinio/docker-graphql:$NEW_VERSION .
+        docker build -t faustocalvinio/docker-graphql:latest .
+    - name: Push docker image
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version}}
+      run: |
+        docker push faustocalvinio/docker-graphql:$NEW_VERSION
+        docker push faustocalvinio/docker-graphql:latest
